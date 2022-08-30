@@ -24,10 +24,8 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   const handleChangeAmount = (row: number, column: number) => {
-    setData((prevState) => {
-      data[row][column].cell.amount = data[row][column].cell.amount + 2;
-      return [...prevState];
-    });
+    data[row][column].cell.amount = data[row][column].cell.amount + 1;
+    setData((prevState) => [...prevState]);
   };
 
   const createTable = (): Promise<Entity[][]> => {
