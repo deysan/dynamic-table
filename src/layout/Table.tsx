@@ -5,31 +5,30 @@ import { TableRow } from '../components/TableRow';
 import { useData } from '../hooks/useData';
 
 export const Table: React.FC = () => {
-  const { data, loading } = useData();
-
-  if (loading) return <Loader />;
+  const { data, loading, handleAddRow } = useData();
 
   const cellAmount = useMemo(() => {
     const cellAmountArray = [];
 
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data?.[0]?.length; i++) {
       const amount = Math.round(
         data
-          .map((row) => row[i].cell.amount)
+          .map((row) => row?.[i]?.cell.amount)
           .reduce((acc, value) => acc + value, 0) / data.length,
       );
       cellAmountArray.push(amount);
     }
-    cellAmountArray.push(0);
 
     return cellAmountArray;
   }, [data]);
+
+  if (loading) return <Loader />;
 
   return (
     <div className="table">
       {data.map((row, index) => (
         <div className="row" key={index}>
-          <TableRow entities={row} />
+          <TableRow entities={row} currentRow={index} />
         </div>
       ))}
       <div className="row">
@@ -38,6 +37,9 @@ export const Table: React.FC = () => {
             {cell}
           </div>
         ))}
+        <div className="cell cell-active">
+          <button onClick={handleAddRow}>Add Row</button>
+        </div>
       </div>
     </div>
   );

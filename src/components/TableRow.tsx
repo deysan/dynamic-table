@@ -5,10 +5,11 @@ import { useData } from '../hooks/useData';
 
 interface TableRowProps {
   entities: Entity[];
+  currentRow: number;
 }
 
-export const TableRow: React.FC<TableRowProps> = ({ entities }) => {
-  const { handleChangeAmount } = useData();
+export const TableRow: React.FC<TableRowProps> = ({ entities, currentRow }) => {
+  const { handleChangeAmount, handleDelete } = useData();
   const [isHover, setHover] = useState(false);
 
   const sumCell = entities.reduce((acc, value) => acc + value.cell.amount, 0);
@@ -42,11 +43,19 @@ export const TableRow: React.FC<TableRowProps> = ({ entities }) => {
         );
       })}
       <div
-        className="cell"
+        className="cell cell-active"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
         {sumCell}
+        {isHover && (
+          <button
+            className="btn-delete"
+            onClick={() => handleDelete(currentRow)}
+          >
+            X
+          </button>
+        )}
       </div>
     </>
   );

@@ -14,4 +14,6 @@ export type Data = {
   countX: number;
   loading: boolean;
   handleChangeAmount: (row: number, column: number) => void;
+  handleDelete: (row: number) => void;
+  handleAddRow: () => void;
 };

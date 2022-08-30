@@ -28,11 +28,30 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     setData((prevState) => [...prevState]);
   };
 
+  const handleDelete = (row: number) => {
+    setData((prevState) => prevState.filter((_, index) => index !== row));
+  };
+
+  const handleAddRow = () => {
+    const entities: Entity[] = [];
+    for (let j = 0; j < data[0].length; j++) {
+      const entity = {
+        row: data.length,
+        column: j,
+        cell: {
+          id: uuidv4(),
+          amount: getRandomAmount(),
+        },
+      };
+      entities.push(entity);
+    }
+    data.push(entities);
+    setData((prevState) => [...prevState]);
+  };
+
   const createTable = (): Promise<Entity[][]> => {
-    // const m = getRandomCount();
-    // const n = getRandomCount();
-    const m = 10;
-    const n = 10;
+    const m = getRandomCount();
+    const n = getRandomCount();
     const x = getRandomX(m, n);
     const table: Entity[][] = [];
 
@@ -69,7 +88,16 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <DataContext.Provider value={{ data, countX, loading, handleChangeAmount }}>
+    <DataContext.Provider
+      value={{
+        data,
+        countX,
+        loading,
+        handleChangeAmount,
+        handleDelete,
+        handleAddRow,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );

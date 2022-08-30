@@ -45,9 +45,9 @@ h1 {
 }
 
 button {
+  height: 100%;
   border-radius: 8px;
   border: 1px solid #213547;
-  padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
@@ -55,9 +55,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -136,20 +138,33 @@ button:focus-visible {
   justify-content: center;
   align-items: center;
   border: 1px solid #213547;
+}
+
+.cell:hover:not(.cell-active):not(.row:last-child .cell) {
+  color: #646cff;
+  background-color: #dddefc;
   cursor: pointer;
 }
 
-.cell:hover:not(:last-child):not(.row:last-child .cell) {
-  color: #646cff;
-  background-color: #dddefc;
+.cell-active {
+  width: 80px;
+  gap: 10px;
+  justify-content: start;
+  font-weight: bold;
+  border: none;
+  cursor: default;
 }
 
-.cell:last-child,
 .row:last-child .cell {
   font-weight: bold;
   border: none;
+  cursor: default;
 }
 
-.row:last-child .cell:last-child {
-  opacity: 0;
+.btn-delete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
 }
