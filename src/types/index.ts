@@ -4,8 +4,8 @@ export type Cell = {
 };
 
 export type Entity = {
-  row: string;
-  column: string;
+  row: number;
+  column: number;
   cell: Cell;
 };
 
@@ -13,4 +13,5 @@ export type Data = {
   data: Entity[][];
   countX: number;
   loading: boolean;
+  handleChangeAmount: (row: number, column: number) => void;
 };
