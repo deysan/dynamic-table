@@ -1,11 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Loader } from '../components/Loader';
 import { TableRow } from '../components/TableRow';
 import { useData } from '../hooks/useData';
 
 export const Table: React.FC = () => {
-  const { data, loading, handleAddRow } = useData();
+  const { data, countX, loading, handleAddRow } = useData();
+  const [isSelected, setSelected] = useState(false);
 
   const cellAmount = useMemo(() => {
     const cellAmountArray = [];
@@ -26,9 +27,20 @@ export const Table: React.FC = () => {
 
   return (
     <div className="table">
+      <p>
+        <b>M: </b>
+        {data?.length}, <b>N: </b>
+        {data?.[0]?.length}, <b>X: </b>
+        {countX}
+      </p>
       {data.map((row, index) => (
         <div className="row" key={index}>
-          <TableRow entities={row} currentRow={index} />
+          <TableRow
+            entities={row}
+            currentRow={index}
+            isSelected={isSelected}
+            setSelected={setSelected}
+          />
         </div>
       ))}
       <div className="row">

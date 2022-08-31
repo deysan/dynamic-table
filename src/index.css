@@ -16,7 +16,6 @@
 }
 
 #root {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -138,11 +137,12 @@ button:focus-visible {
   justify-content: center;
   align-items: center;
   border: 1px solid #213547;
+  transition: all 200ms ease;
 }
 
 .cell:hover:not(.cell-active):not(.row:last-child .cell) {
-  color: #646cff;
-  background-color: #dddefc;
+  color: #646cff !important;
+  border-color: #646cff;
   cursor: pointer;
 }
 

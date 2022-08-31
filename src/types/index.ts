@@ -16,4 +16,6 @@ export type Data = {
   handleChangeAmount: (row: number, column: number) => void;
   handleDelete: (row: number) => void;
   handleAddRow: () => void;
+  handleSelect: (amount: number, id: string) => void;
+  selectedData: string[];
 };

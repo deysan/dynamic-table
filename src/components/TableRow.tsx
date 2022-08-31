@@ -6,11 +6,24 @@ import { useData } from '../hooks/useData';
 interface TableRowProps {
   entities: Entity[];
   currentRow: number;
+  isSelected: boolean;
+  setSelected: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const TableRow: React.FC<TableRowProps> = ({ entities, currentRow }) => {
-  const { handleChangeAmount, handleDelete } = useData();
+export const TableRow: React.FC<TableRowProps> = ({
+  entities,
+  currentRow,
+  isSelected,
+  setSelected,
+}) => {
+  const { handleChangeAmount, handleDelete, handleSelect, selectedData } =
+    useData();
   const [isHover, setHover] = useState(false);
+
+  const selectedCell = (amount: number, id: string) => {
+    setSelected(true);
+    handleSelect(amount, id);
+  };
 
   const sumCell = entities.reduce((acc, value) => acc + value.cell.amount, 0);
 
@@ -22,6 +35,22 @@ export const TableRow: React.FC<TableRowProps> = ({ entities, currentRow }) => {
             className="cell"
             key={entity.cell.id}
             onClick={() => handleChangeAmount(entity.row, entity.column)}
+            onMouseEnter={() =>
+              selectedCell(entity.cell.amount, entity.cell.id)
+            }
+            onMouseLeave={() => setSelected(false)}
+            style={{
+              color: `${
+                isSelected && selectedData.includes(entity.cell.id)
+                  ? '#646cff'
+                  : '#213547'
+              }`,
+              backgroundColor: `${
+                isSelected && selectedData.includes(entity.cell.id)
+                  ? '#dddefc'
+                  : '#ffffff'
+              }`,
+            }}
           >
             {isHover
               ? Math.round((entity.cell.amount / sumCell) * 100) + '%'
