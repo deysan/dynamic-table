@@ -1,4 +1,4 @@
-import { Data, Entity } from '../types';
+import { Cell, Data, Row, Table } from '../types';
 import React, { useContext, useEffect, useState } from 'react';
 import {
   getRandomAmount,
@@ -19,93 +19,95 @@ interface DataProviderProps {
 }
 
 export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
-  const [data, setData] = useState<Entity[][]>([]);
+  const [table, setTable] = useState<Table>({});
   const [countX, setCountX] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [selectedData, setSelectedData] = useState<string[]>([]);
+  const [selectedCell, setSelectedCell] = useState<string[]>([]);
 
-  const handleChangeAmount = (row: number, column: number) => {
-    data[row][column].cell.amount = data[row][column].cell.amount + 1;
-    setData((prevState) => [...prevState]);
+  const handleChangeCell = (rowId: string, cellId: string) => {
+    const changedTable: Table = { ...table };
+    const cellIndex = changedTable[rowId].findIndex(({ id }) => id === cellId);
+    changedTable[rowId][cellIndex].amount += 1;
+    setTable(changedTable);
   };
 
-  const handleDelete = (row: number) => {
-    setData((prevState) => prevState.filter((_, index) => index !== row));
+  const handleDeleteRow = (rowId: string) => {
+    const changedTable: Table = { ...table };
+    delete changedTable[rowId];
+    setTable(changedTable);
   };
 
-  const handleSelect = (amount: number, id: string) => {
-    let newData: Entity[] = [];
-    newData = newData?.concat.apply(newData, data);
+  const handleSelectCell = (cellAmount: number, cellId: string) => {
+    let rowArray: Row = [];
+    rowArray = rowArray?.concat.apply(rowArray, Object.values(table));
 
     const sortMin = [
-      ...newData
-        .filter(({ cell }) => cell.amount <= amount)
-        .sort((a, b) => b.cell.amount - a.cell.amount),
+      ...rowArray
+        .filter((cell) => cell.amount <= cellAmount)
+        .sort((a, b) => b.amount - a.amount),
     ];
 
     const sortMax = [
-      ...newData
-        .filter(({ cell }) => cell.amount >= amount)
-        .sort((a, b) => a.cell.amount - b.cell.amount),
+      ...rowArray
+        .filter((cell) => cell.amount >= cellAmount)
+        .sort((a, b) => a.amount - b.amount),
     ];
 
-    const selectedCell: Entity[] =
+    const selectedCell: Row =
       sortMin.length > sortMax.length
         ? sortMin
             .reduce((acc, entity, i) => {
               acc.push(entity, sortMax[i]);
               return acc;
-            }, [] as Entity[])
-            .filter((cell) => cell?.cell?.id !== id)
+            }, [] as Row)
+            .filter((cell) => cell?.id !== cellId)
             .slice(0, countX)
         : sortMax
             .reduce((acc, entity, i) => {
               acc.push(entity, sortMin[i]);
               return acc;
-            }, [] as Entity[])
-            .filter((cell) => cell?.cell?.id !== id)
+            }, [] as Row)
+            .filter((cell) => cell?.id !== cellId)
             .slice(0, countX);
 
-    setSelectedData(selectedCell.map((cell) => cell?.cell?.id));
+    setSelectedCell(selectedCell.map((cell) => cell?.id));
   };
 
   const handleAddRow = () => {
-    const entities: Entity[] = [];
-    for (let j = 0; j < data[0].length; j++) {
-      const entity = {
-        row: data.length,
-        column: j,
-        cell: {
-          id: uuidv4(),
-          amount: getRandomAmount(),
-        },
+    const changedTable: Table = { ...table };
+    const row: Row = [];
+    const rowId = uuidv4();
+
+    for (let j = 0; j < Object.values(table)[0].length; j++) {
+      const cell: Cell = {
+        id: uuidv4(),
+        amount: getRandomAmount(),
       };
-      entities.push(entity);
+      row.push(cell);
     }
-    data.push(entities);
-    setData((prevState) => [...prevState]);
+
+    changedTable[rowId] = row;
+    setTable(changedTable);
   };
 
-  const createTable = (): Promise<Entity[][]> => {
+  const createTable = (): Promise<Table> => {
     const m = getRandomCount();
     const n = getRandomCount();
     const x = getRandomX(m, n);
-    const table: Entity[][] = [];
+    const table: Table = {};
 
     for (let i = 0; i < m; i++) {
-      const entities = [];
+      const row: Row = [];
+      const rowId = uuidv4();
+
       for (let j = 0; j < n; j++) {
-        const entity = {
-          row: i,
-          column: j,
-          cell: {
-            id: uuidv4(),
-            amount: getRandomAmount(),
-          },
+        const cell: Cell = {
+          id: uuidv4(),
+          amount: getRandomAmount(),
         };
-        entities.push(entity);
+        row.push(cell);
       }
-      table.push(entities);
+      table[rowId] = row;
     }
 
     setCountX(x);
@@ -120,21 +122,21 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   useEffect(() => {
     setLoading(true);
     createTable()
-      .then((response) => setData(response))
+      .then((response) => setTable(response))
       .finally(() => setLoading(false));
   }, []);
 
   return (
     <DataContext.Provider
       value={{
-        data,
+        table,
         countX,
         loading,
-        handleChangeAmount,
-        handleDelete,
+        handleChangeCell,
+        handleDeleteRow,
         handleAddRow,
-        handleSelect,
-        selectedData,
+        handleSelectCell,
+        selectedCell,
       }}
     >
       {children}

@@ -1,60 +1,58 @@
 import React, { useState } from 'react';
 
-import { Entity } from '../types';
+import { Row } from '../types';
 import { useData } from '../hooks/useData';
 
 interface TableRowProps {
-  entities: Entity[];
-  currentRow: number;
+  row: Row;
+  rowId: string;
   isSelected: boolean;
   setSelected: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const TableRow: React.FC<TableRowProps> = ({
-  entities,
-  currentRow,
+  row,
+  rowId,
   isSelected,
   setSelected,
 }) => {
-  const { handleChangeAmount, handleDelete, handleSelect, selectedData } =
+  const { handleChangeCell, handleDeleteRow, handleSelectCell, selectedCell } =
     useData();
   const [isHover, setHover] = useState(false);
 
-  const selectedCell = (amount: number, id: string) => {
+  const selectedCurrentCell = (cellAmount: number, cellId: string) => {
     setSelected(true);
-    handleSelect(amount, id);
+    handleSelectCell(cellAmount, cellId);
   };
 
-  const sumCell = entities.reduce((acc, value) => acc + value.cell.amount, 0);
+  const sumCell = row.reduce((acc, cell) => acc + cell.amount, 0);
 
   return (
     <>
-      {entities.map((entity) => {
+      {row.map((cell) => {
         return (
           <div
             className="cell"
-            key={entity.cell.id}
-            onClick={() => handleChangeAmount(entity.row, entity.column)}
-            onMouseEnter={() =>
-              selectedCell(entity.cell.amount, entity.cell.id)
-            }
+            key={cell.id}
+            onClick={() => handleChangeCell(rowId, cell.id)}
+            onMouseEnter={() => selectedCurrentCell(cell.amount, cell.id)}
             onMouseLeave={() => setSelected(false)}
             style={{
               color: `${
-                isSelected && selectedData.includes(entity.cell.id)
+                isSelected && selectedCell.includes(cell.id)
                   ? '#646cff'
                   : '#213547'
               }`,
               backgroundColor: `${
-                isSelected && selectedData.includes(entity.cell.id)
+                isSelected && selectedCell.includes(cell.id)
                   ? '#dddefc'
                   : '#ffffff'
               }`,
             }}
           >
             {isHover
-              ? Math.round((entity.cell.amount / sumCell) * 100) + '%'
-              : entity.cell.amount}
+              ? Math.round((cell.amount / sumCell) * 100) + '%'
+              : cell.amount}
             <div
               style={{
                 position: 'absolute',
@@ -62,7 +60,7 @@ export const TableRow: React.FC<TableRowProps> = ({
                 width: '100%',
                 height: `${
                   isHover
-                    ? Math.round((entity.cell.amount / sumCell) * 100) + '%'
+                    ? Math.round((cell.amount / sumCell) * 100) + '%'
                     : '0'
                 }`,
                 backgroundColor: '#646cff',
@@ -78,10 +76,7 @@ export const TableRow: React.FC<TableRowProps> = ({
       >
         {sumCell}
         {isHover && (
-          <button
-            className="btn-delete"
-            onClick={() => handleDelete(currentRow)}
-          >
+          <button className="btn-delete" onClick={() => handleDeleteRow(rowId)}>
             X
           </button>
         )}

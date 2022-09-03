@@ -5,23 +5,24 @@ import { TableRow } from '../components/TableRow';
 import { useData } from '../hooks/useData';
 
 export const Table: React.FC = () => {
-  const { data, countX, loading, handleAddRow } = useData();
+  const { table, countX, loading, handleAddRow } = useData();
   const [isSelected, setSelected] = useState(false);
 
-  const cellAmount = useMemo(() => {
-    const cellAmountArray = [];
+  const columnAverage = useMemo(() => {
+    const columnAverageArray = [];
 
-    for (let i = 0; i < data?.[0]?.length; i++) {
-      const amount = Math.round(
-        data
-          .map((row) => row?.[i]?.cell.amount)
-          .reduce((acc, value) => acc + value, 0) / data.length,
-      );
-      cellAmountArray.push(amount);
+    for (let i = 0; i < Object.values(table)?.[0]?.length; i++) {
+      let average = 0;
+
+      for (let j = 0; j < Object.keys(table).length; j++) {
+        average += Object.values(table)[j][i].amount;
+      }
+
+      columnAverageArray.push(Math.round(average / Object.keys(table).length));
     }
 
-    return cellAmountArray;
-  }, [data]);
+    return columnAverageArray;
+  }, [table]);
 
   if (loading) return <Loader />;
 
@@ -29,23 +30,23 @@ export const Table: React.FC = () => {
     <div className="table">
       <p>
         <b>M: </b>
-        {data?.length}, <b>N: </b>
-        {data?.[0]?.length}, <b>X: </b>
+        {Object.keys(table)?.length}, <b>N: </b>
+        {Object.values(table)?.[0]?.length}, <b>X: </b>
         {countX}
       </p>
-      {data.map((row, index) => (
-        <div className="row" key={index}>
+      {Object.keys(table).map((row) => (
+        <div className="row" key={row}>
           <TableRow
-            entities={row}
-            currentRow={index}
+            row={table[row]}
+            rowId={row}
             isSelected={isSelected}
             setSelected={setSelected}
           />
         </div>
       ))}
       <div className="row">
-        {cellAmount.map((cell, index) => (
-          <div className="cell" key={`${index}-${cell}`}>
+        {columnAverage.map((cell, index) => (
+          <div className="cell" key={`columnAverage-${index}`}>
             {cell}
           </div>
         ))}
