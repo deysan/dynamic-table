@@ -14,11 +14,11 @@ export const Table: React.FC = () => {
     for (let i = 0; i < Object.values(table)?.[0]?.length; i++) {
       let average = 0;
 
-      for (let j = 0; j < Object.keys(table).length; j++) {
+      for (let j = 0; j < Object.keys(table)?.length; j++) {
         average += Object.values(table)[j][i].amount;
       }
 
-      columnAverageArray.push(Math.round(average / Object.keys(table).length));
+      columnAverageArray.push(Math.round(average / Object.keys(table)?.length));
     }
 
     return columnAverageArray;
@@ -29,10 +29,20 @@ export const Table: React.FC = () => {
   return (
     <div className="table">
       <p>
-        <b>M: </b>
-        {Object.keys(table)?.length}, <b>N: </b>
-        {Object.values(table)?.[0]?.length}, <b>X: </b>
-        {countX}
+        <>
+          <b>M: </b>
+          {Object.keys(table)?.length}
+        </>
+        {', '}
+        <>
+          <b>N: </b>
+          {Object.values(table)?.[0]?.length}
+        </>
+        {', '}
+        <>
+          <b>X: </b>
+          {countX}
+        </>
       </p>
       {Object.keys(table).map((row) => (
         <div className="row" key={row}>

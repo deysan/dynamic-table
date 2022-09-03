@@ -37,42 +37,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     setTable(changedTable);
   };
 
-  const handleSelectCell = (cellAmount: number, cellId: string) => {
-    let rowArray: Row = [];
-    rowArray = rowArray?.concat.apply(rowArray, Object.values(table));
-
-    const sortMin = [
-      ...rowArray
-        .filter((cell) => cell.amount <= cellAmount)
-        .sort((a, b) => b.amount - a.amount),
-    ];
-
-    const sortMax = [
-      ...rowArray
-        .filter((cell) => cell.amount >= cellAmount)
-        .sort((a, b) => a.amount - b.amount),
-    ];
-
-    const selectedCell: Row =
-      sortMin.length > sortMax.length
-        ? sortMin
-            .reduce((acc, entity, i) => {
-              acc.push(entity, sortMax[i]);
-              return acc;
-            }, [] as Row)
-            .filter((cell) => cell?.id !== cellId)
-            .slice(0, countX)
-        : sortMax
-            .reduce((acc, entity, i) => {
-              acc.push(entity, sortMin[i]);
-              return acc;
-            }, [] as Row)
-            .filter((cell) => cell?.id !== cellId)
-            .slice(0, countX);
-
-    setSelectedCell(selectedCell.map((cell) => cell?.id));
-  };
-
   const handleAddRow = () => {
     const changedTable: Table = { ...table };
     const row: Row = [];
@@ -88,6 +52,22 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
     changedTable[rowId] = row;
     setTable(changedTable);
+  };
+
+  const handleSelectCell = (cellAmount: number, cellId: string) => {
+    let rowArray: Row = [];
+    rowArray = rowArray?.concat
+      .apply(rowArray, Object.values(table))
+      .filter((cell) => cell?.id !== cellId);
+
+    const closestArray = rowArray
+      .sort(
+        (a, b) =>
+          Math.abs(cellAmount - a.amount) - Math.abs(cellAmount - b.amount),
+      )
+      .slice(0, countX);
+
+    setSelectedCell(closestArray.map((cell) => cell?.id));
   };
 
   const createTable = (): Promise<Table> => {
