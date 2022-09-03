@@ -44,12 +44,15 @@ h1 {
 
 button {
   height: 100%;
-  border-radius: 8px;
-  border: 1px solid #213547;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   background-color: #f9f9f9;
+  border: 1px solid #213547;
+  border-radius: 8px;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -153,4 +156,24 @@ button:focus-visible {
   align-items: center;
   width: 20px;
   height: 20px;
+}
+
+.data {
+  width: 280px;
+  padding: 20px 50px 40px;
+  box-shadow: 1px 4px 10px 1px #aaa;
+}
+
+.data * {
+  box-sizing: border-box;
+}
+
+.data h2 {
+  margin-bottom: 25px;
+}
+
+input {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 5px 10px;
 }

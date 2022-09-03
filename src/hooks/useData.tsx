@@ -1,11 +1,7 @@
-import { Cell, Data, Row, Table } from '../types';
+import { Cell, Data, Input, Row, Table } from '../types';
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  getRandomAmount,
-  getRandomCount,
-  getRandomX,
-} from '../utils/randomNumbers';
 
+import { getRandomAmount } from '../utils/randomNumbers';
 import { v4 as uuidv4 } from 'uuid';
 
 const DataContext = React.createContext<Data>(null!);
@@ -16,11 +12,16 @@ export const useData = () => {
 
 interface DataProviderProps {
   children: React.ReactNode;
+  setOpenTable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
+export const DataProvider: React.FC<DataProviderProps> = ({
+  children,
+  setOpenTable,
+}) => {
+  const [isCreate, setCreate] = useState(false);
+  const [input, setInput] = useState<Input>({ m: 5, n: 10, x: 3 });
   const [table, setTable] = useState<Table>({});
-  const [countX, setCountX] = useState(0);
   const [loading, setLoading] = useState(false);
   const [selectedCell, setSelectedCell] = useState<string[]>([]);
 
@@ -65,22 +66,25 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
         (a, b) =>
           Math.abs(cellAmount - a.amount) - Math.abs(cellAmount - b.amount),
       )
-      .slice(0, countX);
+      .slice(0, input.x);
 
     setSelectedCell(closestArray.map((cell) => cell?.id));
   };
 
+  const refreshTable = () => {
+    setOpenTable(false);
+    setCreate(false);
+    setTable({});
+  };
+
   const createTable = (): Promise<Table> => {
-    const m = getRandomCount();
-    const n = getRandomCount();
-    const x = getRandomX(m, n);
     const table: Table = {};
 
-    for (let i = 0; i < m; i++) {
+    for (let i = 0; i < input.m; i++) {
       const row: Row = [];
       const rowId = uuidv4();
 
-      for (let j = 0; j < n; j++) {
+      for (let j = 0; j < input.n; j++) {
         const cell: Cell = {
           id: uuidv4(),
           amount: getRandomAmount(),
@@ -90,33 +94,37 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
       table[rowId] = row;
     }
 
-    setCountX(x);
-
     return new Promise((resolve) => {
       setTimeout(function () {
         resolve(table);
-      }, 2000);
+      }, 1000);
     });
   };
 
   useEffect(() => {
-    setLoading(true);
-    createTable()
-      .then((response) => setTable(response))
-      .finally(() => setLoading(false));
-  }, []);
+    if (isCreate) {
+      setLoading(true);
+      createTable()
+        .then((response) => setTable(response))
+        .finally(() => setLoading(false));
+    }
+  }, [isCreate]);
 
   return (
     <DataContext.Provider
       value={{
         table,
-        countX,
         loading,
         handleChangeCell,
         handleDeleteRow,
         handleAddRow,
         handleSelectCell,
         selectedCell,
+        isCreate,
+        setCreate,
+        input,
+        setInput,
+        refreshTable,
       }}
     >
       {children}
