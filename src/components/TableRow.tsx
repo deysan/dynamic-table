@@ -50,9 +50,6 @@ export const TableRow: React.FC<TableRowProps> = ({
               }`,
             }}
           >
-            {isHover
-              ? Math.round((cell.amount / sumCell) * 100) + '%'
-              : cell.amount}
             <div
               style={{
                 position: 'absolute',
@@ -63,9 +60,20 @@ export const TableRow: React.FC<TableRowProps> = ({
                     ? Math.round((cell.amount / sumCell) * 100) + '%'
                     : '0'
                 }`,
-                backgroundColor: '#646cff',
+                color: 'white',
+                backgroundColor: '#bbbeff',
+                zIndex: '1',
               }}
             ></div>
+            <span
+              style={{
+                zIndex: '2',
+              }}
+            >
+              {isHover
+                ? Math.round((cell.amount / sumCell) * 100) + '%'
+                : cell.amount}
+            </span>
           </div>
         );
       })}
@@ -76,8 +84,27 @@ export const TableRow: React.FC<TableRowProps> = ({
       >
         {sumCell}
         {isHover && (
-          <button className="btn-delete" onClick={() => handleDeleteRow(rowId)}>
-            X
+          <button
+            className="btn-delete"
+            style={{
+              width: '24px',
+              height: '24px',
+            }}
+            onClick={() => handleDeleteRow(rowId)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
           </button>
         )}
       </div>
