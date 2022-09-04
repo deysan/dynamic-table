@@ -3,19 +3,29 @@ export type Cell = {
   amount: number;
 };
 
-export type Entity = {
-  row: number;
-  column: number;
-  cell: Cell;
+export type Row = Cell[];
+
+export type Table = {
+  [key: string]: Row;
+};
+
+export type Input = {
+  m: number;
+  n: number;
+  x: number;
 };
 
 export type Data = {
-  data: Entity[][];
-  countX: number;
+  table: Table;
   loading: boolean;
-  handleChangeAmount: (row: number, column: number) => void;
-  handleDelete: (row: number) => void;
+  handleChangeCell: (rowId: string, cellId: string) => void;
+  handleDeleteRow: (rowId: string) => void;
   handleAddRow: () => void;
-  handleSelect: (amount: number, id: string) => void;
-  selectedData: string[];
+  handleSelectCell: (cellAmount: number, cellId: string) => void;
+  selectedCell: string[];
+  isCreate: boolean;
+  setCreate: React.Dispatch<React.SetStateAction<boolean>>;
+  input: Input;
+  setInput: React.Dispatch<React.SetStateAction<Input>>;
+  refreshTable: () => void;
 };

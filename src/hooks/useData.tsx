@@ -1,11 +1,7 @@
-import { Data, Entity } from '../types';
+import { Cell, Data, Input, Row, Table } from '../types';
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  getRandomAmount,
-  getRandomCount,
-  getRandomX,
-} from '../utils/randomNumbers';
 
+import { getRandomAmount } from '../utils/randomNumbers';
 import { v4 as uuidv4 } from 'uuid';
 
 const DataContext = React.createContext<Data>(null!);
@@ -16,125 +12,119 @@ export const useData = () => {
 
 interface DataProviderProps {
   children: React.ReactNode;
+  setOpenTable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
-  const [data, setData] = useState<Entity[][]>([]);
-  const [countX, setCountX] = useState(0);
+export const DataProvider: React.FC<DataProviderProps> = ({
+  children,
+  setOpenTable,
+}) => {
+  const [isCreate, setCreate] = useState(false);
+  const [input, setInput] = useState<Input>({ m: 5, n: 10, x: 3 });
+  const [table, setTable] = useState<Table>({});
   const [loading, setLoading] = useState(false);
-  const [selectedData, setSelectedData] = useState<string[]>([]);
+  const [selectedCell, setSelectedCell] = useState<string[]>([]);
 
-  const handleChangeAmount = (row: number, column: number) => {
-    data[row][column].cell.amount = data[row][column].cell.amount + 1;
-    setData((prevState) => [...prevState]);
+  const handleChangeCell = (rowId: string, cellId: string) => {
+    const changedTable: Table = { ...table };
+    const cellIndex = changedTable[rowId].findIndex(({ id }) => id === cellId);
+    changedTable[rowId][cellIndex].amount += 1;
+    setTable(changedTable);
   };
 
-  const handleDelete = (row: number) => {
-    setData((prevState) => prevState.filter((_, index) => index !== row));
-  };
-
-  const handleSelect = (amount: number, id: string) => {
-    let newData: Entity[] = [];
-    newData = newData?.concat.apply(newData, data);
-
-    const sortMin = [
-      ...newData
-        .filter(({ cell }) => cell.amount <= amount)
-        .sort((a, b) => b.cell.amount - a.cell.amount),
-    ];
-
-    const sortMax = [
-      ...newData
-        .filter(({ cell }) => cell.amount >= amount)
-        .sort((a, b) => a.cell.amount - b.cell.amount),
-    ];
-
-    const selectedCell: Entity[] =
-      sortMin.length > sortMax.length
-        ? sortMin
-            .reduce((acc, entity, i) => {
-              acc.push(entity, sortMax[i]);
-              return acc;
-            }, [] as Entity[])
-            .filter((cell) => cell?.cell?.id !== id)
-            .slice(0, countX)
-        : sortMax
-            .reduce((acc, entity, i) => {
-              acc.push(entity, sortMin[i]);
-              return acc;
-            }, [] as Entity[])
-            .filter((cell) => cell?.cell?.id !== id)
-            .slice(0, countX);
-
-    setSelectedData(selectedCell.map((cell) => cell?.cell?.id));
+  const handleDeleteRow = (rowId: string) => {
+    const changedTable: Table = { ...table };
+    delete changedTable[rowId];
+    setTable(changedTable);
   };
 
   const handleAddRow = () => {
-    const entities: Entity[] = [];
-    for (let j = 0; j < data[0].length; j++) {
-      const entity = {
-        row: data.length,
-        column: j,
-        cell: {
-          id: uuidv4(),
-          amount: getRandomAmount(),
-        },
+    const changedTable: Table = { ...table };
+    const row: Row = [];
+    const rowId = uuidv4();
+
+    for (let j = 0; j < Object.values(table)[0].length; j++) {
+      const cell: Cell = {
+        id: uuidv4(),
+        amount: getRandomAmount(),
       };
-      entities.push(entity);
+      row.push(cell);
     }
-    data.push(entities);
-    setData((prevState) => [...prevState]);
+
+    changedTable[rowId] = row;
+    setTable(changedTable);
   };
 
-  const createTable = (): Promise<Entity[][]> => {
-    const m = getRandomCount();
-    const n = getRandomCount();
-    const x = getRandomX(m, n);
-    const table: Entity[][] = [];
+  const handleSelectCell = (cellAmount: number, cellId: string) => {
+    let rowArray: Row = [];
+    rowArray = rowArray?.concat
+      .apply(rowArray, Object.values(table))
+      .filter((cell) => cell?.id !== cellId);
 
-    for (let i = 0; i < m; i++) {
-      const entities = [];
-      for (let j = 0; j < n; j++) {
-        const entity = {
-          row: i,
-          column: j,
-          cell: {
-            id: uuidv4(),
-            amount: getRandomAmount(),
-          },
+    const closestArray = rowArray
+      .sort(
+        (a, b) =>
+          Math.abs(cellAmount - a.amount) - Math.abs(cellAmount - b.amount),
+      )
+      .slice(0, input.x);
+
+    setSelectedCell(closestArray.map((cell) => cell?.id));
+  };
+
+  const refreshTable = () => {
+    setOpenTable(false);
+    setCreate(false);
+    setTable({});
+  };
+
+  const createTable = (): Promise<Table> => {
+    const table: Table = {};
+
+    for (let i = 0; i < input.m; i++) {
+      const row: Row = [];
+      const rowId = uuidv4();
+
+      for (let j = 0; j < input.n; j++) {
+        const cell: Cell = {
+          id: uuidv4(),
+          amount: getRandomAmount(),
         };
-        entities.push(entity);
+        row.push(cell);
       }
-      table.push(entities);
+      table[rowId] = row;
     }
-
-    setCountX(x);
 
     return new Promise((resolve) => {
       setTimeout(function () {
         resolve(table);
-      }, 2000);
+      }, 1000);
     });
   };
 
   useEffect(() => {
-    setLoading(true);
-    createTable()
-      .then((response) => setData(response))
-      .finally(() => setLoading(false));
-  }, []);
+    if (isCreate) {
+      setLoading(true);
+      createTable()
+        .then((response) => setTable(response))
+        .finally(() => setLoading(false));
+    }
+  }, [isCreate]);
 
   return (
     <DataContext.Provider
       value={{
-        data,
-        countX,
+        table,
         loading,
-        handleChangeAmount,
-        handleDelete,
+        handleChangeCell,
+        handleDeleteRow,
         handleAddRow,
-        handleSelect,
-        selectedData,
+        handleSelectCell,
+        selectedCell,
+        isCreate,
+        setCreate,
+        input,
+        setInput,
+        refreshTable,
       }}
     >
       {children}
