@@ -110,5 +110,4 @@ export const TableRow: React.FC<TableRowProps> = ({
       </div>
     </>
   );
-  // return null;
 };

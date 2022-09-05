@@ -27,13 +27,18 @@ export const DataProvider: React.FC<DataProviderProps> = ({
 
   const handleChangeCell = (rowId: string, cellId: string) => {
     setTable((prevState) => {
-      const changedRow = Object.values([...prevState[rowId]]).map((cell) => {
-        const changedCell =
-          cell.id === cellId ? (cell.amount += 1) : cell.amount;
-        return { ...cell, changedCell };
-      });
-
-      return { ...prevState, [rowId]: changedRow };
+      return {
+        ...prevState,
+        [rowId]: prevState[rowId].map((cell, index) => {
+          if (cell.id === cellId) {
+            return {
+              ...cell,
+              amount: (prevState[rowId][index].amount += 1),
+            };
+          }
+          return cell;
+        }),
+      };
     });
   };
 
