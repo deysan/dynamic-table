@@ -33,7 +33,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({
           if (cell.id === cellId) {
             return {
               ...cell,
-              amount: (prevState[rowId][index].amount += 1),
+              amount: prevState[rowId][index].amount + 1,
             };
           }
           return cell;
