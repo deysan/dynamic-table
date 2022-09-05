@@ -27,19 +27,19 @@ export const DataProvider: React.FC<DataProviderProps> = ({
 
   const handleChangeCell = (rowId: string, cellId: string) => {
     setTable((prevState) => {
-      const changedTable: Table = JSON.parse(JSON.stringify(prevState));
-      const cellIndex = changedTable[rowId].findIndex(
-        ({ id }) => id === cellId,
-      );
-      changedTable[rowId][cellIndex].amount += 1;
+      const changedRow = Object.values([...prevState[rowId]]).map((cell) => {
+        const changedCell =
+          cell.id === cellId ? (cell.amount += 1) : cell.amount;
+        return { ...cell, changedCell };
+      });
 
-      return { ...prevState, ...changedTable };
+      return { ...prevState, [rowId]: changedRow };
     });
   };
 
   const handleDeleteRow = (rowId: string) => {
     setTable((prevState) => {
-      const changedTable: Table = JSON.parse(JSON.stringify(prevState));
+      const changedTable: Table = { ...prevState };
       delete changedTable[rowId];
 
       return { ...changedTable };
