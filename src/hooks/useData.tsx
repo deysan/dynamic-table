@@ -47,7 +47,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({
       const changedTable: Table = { ...prevState };
       delete changedTable[rowId];
 
-      return { ...changedTable };
+      return changedTable;
     });
   };
 
