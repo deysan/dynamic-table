@@ -26,20 +26,27 @@ export const DataProvider: React.FC<DataProviderProps> = ({
   const [selectedCell, setSelectedCell] = useState<string[]>([]);
 
   const handleChangeCell = (rowId: string, cellId: string) => {
-    const changedTable: Table = { ...table };
-    const cellIndex = changedTable[rowId].findIndex(({ id }) => id === cellId);
-    changedTable[rowId][cellIndex].amount += 1;
-    setTable(changedTable);
+    setTable((prevState) => {
+      const changedTable: Table = JSON.parse(JSON.stringify(prevState));
+      const cellIndex = changedTable[rowId].findIndex(
+        ({ id }) => id === cellId,
+      );
+      changedTable[rowId][cellIndex].amount += 1;
+
+      return { ...prevState, ...changedTable };
+    });
   };
 
   const handleDeleteRow = (rowId: string) => {
-    const changedTable: Table = { ...table };
-    delete changedTable[rowId];
-    setTable(changedTable);
+    setTable((prevState) => {
+      const changedTable: Table = JSON.parse(JSON.stringify(prevState));
+      delete changedTable[rowId];
+
+      return { ...changedTable };
+    });
   };
 
   const handleAddRow = () => {
-    const changedTable: Table = { ...table };
     const row: Row = [];
     const rowId = uuidv4();
 
@@ -51,8 +58,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({
       row.push(cell);
     }
 
-    changedTable[rowId] = row;
-    setTable(changedTable);
+    setTable((prevState) => ({ ...prevState, [rowId]: row }));
   };
 
   const handleSelectCell = (cellAmount: number, cellId: string) => {
