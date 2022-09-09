@@ -13,14 +13,16 @@ export const useData = () => {
 interface DataProviderProps {
   children: React.ReactNode;
   setOpenTable: React.Dispatch<React.SetStateAction<boolean>>;
+  data: Input;
 }
 
 export const DataProvider: React.FC<DataProviderProps> = ({
   children,
   setOpenTable,
+  data,
 }) => {
   const [isCreate, setCreate] = useState(false);
-  const [input, setInput] = useState<Input>({ m: 5, n: 10, x: 3 });
+  const [input, setInput] = useState<Input>({ m: '5', n: '10', x: '3' });
   const [table, setTable] = useState<Table>({});
   const [loading, setLoading] = useState(false);
   const [selectedCell, setSelectedCell] = useState<string[]>([]);
@@ -77,25 +79,27 @@ export const DataProvider: React.FC<DataProviderProps> = ({
         (a, b) =>
           Math.abs(cellAmount - a.amount) - Math.abs(cellAmount - b.amount),
       )
-      .slice(0, input.x);
+      .slice(0, +data.x);
 
     setSelectedCell(closestArray.map((cell) => cell?.id));
   };
 
   const refreshTable = () => {
-    setOpenTable(false);
-    setCreate(false);
-    setTable({});
+    // setOpenTable(false);
+    // setCreate(false);
+    // setTable({});
+    setLoading(true);
+    window.location.href = '/';
   };
 
   const createTable = (): Promise<Table> => {
     const table: Table = {};
 
-    for (let i = 0; i < input.m; i++) {
+    for (let i = 0; i < +data.m; i++) {
       const row: Row = [];
       const rowId = uuidv4();
 
-      for (let j = 0; j < input.n; j++) {
+      for (let j = 0; j < +data.n; j++) {
         const cell: Cell = {
           id: uuidv4(),
           amount: getRandomAmount(),
@@ -112,14 +116,23 @@ export const DataProvider: React.FC<DataProviderProps> = ({
     });
   };
 
+  const isEmptyData = () => {
+    for (let i in data) return false;
+    return true;
+  };
+
   useEffect(() => {
-    if (isCreate) {
+    if (!isEmptyData()) {
+      setOpenTable(true);
       setLoading(true);
+      setInput(data);
       createTable()
         .then((response) => setTable(response))
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  }, [isCreate]);
+  }, [data]);
 
   return (
     <DataContext.Provider

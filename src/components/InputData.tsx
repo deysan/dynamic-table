@@ -14,9 +14,9 @@ export const InputData: React.FC<InputDataProps> = ({ setOpenTable }) => {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setCreate(true);
-    setOpenTable(true);
+    // event.preventDefault();
+    // setCreate(true);
+    // setOpenTable(true);
   };
 
   return (
@@ -55,7 +55,7 @@ export const InputData: React.FC<InputDataProps> = ({ setOpenTable }) => {
             type="number"
             value={input.x}
             min={1}
-            max={input?.m * input?.n || 100}
+            max={+input?.m * +input?.n || 100}
             onChange={handleChange}
           />
         </div>
