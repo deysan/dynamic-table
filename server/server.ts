@@ -1,4 +1,5 @@
 import App from '../src/App';
+import { Input } from '../src/types';
 import { createElement } from 'react';
 import { createServer } from 'http';
 import fs from 'fs';
@@ -36,10 +37,10 @@ const server = createServer(function (req, res) {
           'utf-8',
         );
 
-        const tableData = parse(req.url.substring(2));
+        const data = parse(req.url.substring(2)) as Input;
 
         const isEmptyData = () => {
-          for (let i in tableData) return false;
+          for (let i in data) return false;
           return true;
         };
 
@@ -51,7 +52,7 @@ const server = createServer(function (req, res) {
         if (!isEmptyData()) {
           const appData = html.replace(
             '// app-data',
-            `window.__INITIAL_DATA__ = ${JSON.stringify(tableData).replace(
+            `window.__INITIAL_DATA__ = ${JSON.stringify(data).replace(
               /</g,
               '\\u003c',
             )}`,
@@ -59,8 +60,7 @@ const server = createServer(function (req, res) {
 
           appHtml = appData.replace(
             '<!--app-html-->',
-            // @ts-ignore: Unreachable code error
-            renderToString(createElement(App, { ...tableData })),
+            renderToString(createElement(App, { data })),
           );
         }
 
