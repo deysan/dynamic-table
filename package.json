@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "serve": "nodemon --exec \"./node_modules/.bin/ts-node\" server/server.ts"
+    "serve": "nodemon --exec ts-node server/server.ts"
   },
   "dependencies": {
     "react": "^18.2.0",
