@@ -1,8 +1,9 @@
+import { Input, ServerData } from '../src/types';
+
 import App from '../src/App';
-import { Input } from '../src/types';
 import { createElement } from 'react';
 import { createServer } from 'http';
-import { createTable } from './createTable';
+import { createTable } from './table';
 import fs from 'fs';
 import { parse } from 'querystring';
 import path from 'path';
@@ -49,9 +50,11 @@ const server = createServer(function (req, res) {
       if (!isEmptyData()) {
         const tableData = createTable(inputData);
 
+        const data: ServerData = { input: inputData, table: tableData };
+
         const appData = html.replace(
           '// app-data',
-          `window.__INITIAL_DATA__ = ${JSON.stringify(tableData).replace(
+          `window.__INITIAL_DATA__ = ${JSON.stringify(data).replace(
             /</g,
             '\\u003c',
           )}`,
@@ -59,7 +62,7 @@ const server = createServer(function (req, res) {
 
         appHtml = appData.replace(
           '<!--app-html-->',
-          renderToString(createElement(App, { data: tableData })),
+          renderToString(createElement(App, { data })),
         );
       }
 

@@ -29,3 +29,8 @@ export type Data = {
   setInput: React.Dispatch<React.SetStateAction<Input>>;
   refreshTable: () => void;
 };
+
+export interface ServerData {
+  input: Input;
+  table: Table;
+}

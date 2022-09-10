@@ -1,16 +1,16 @@
 import React, { useMemo, useState } from 'react';
 
+import { Input } from '../types';
 import { Loader } from './Loader';
 import { TableRow } from './TableRow';
-import { Table as TableType } from '../types';
 import { useData } from '../hooks/useData';
 
 interface TableProps {
-  table: TableType;
+  input: Input;
 }
 
-export const Table: React.FC<TableProps> = () => {
-  const { table, input, loading, handleAddRow, refreshTable } = useData();
+export const Table: React.FC<TableProps> = ({ input }) => {
+  const { table, loading, handleAddRow, refreshTable } = useData();
   const [isSelected, setSelected] = useState(false);
 
   const columnAverage = useMemo(() => {
