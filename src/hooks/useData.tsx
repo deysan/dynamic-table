@@ -13,7 +13,7 @@ export const useData = () => {
 interface DataProviderProps {
   children: React.ReactNode;
   setOpenTable: React.Dispatch<React.SetStateAction<boolean>>;
-  data: Input;
+  data: Table;
 }
 
 export const DataProvider: React.FC<DataProviderProps> = ({
@@ -23,7 +23,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({
 }) => {
   const [isCreate, setCreate] = useState(false);
   const [input, setInput] = useState<Input>({ m: '5', n: '10', x: '3' });
-  const [table, setTable] = useState<Table>({});
+  const [table, setTable] = useState<Table>(data);
   const [loading, setLoading] = useState(false);
   const [selectedCell, setSelectedCell] = useState<string[]>([]);
 
@@ -79,7 +79,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({
         (a, b) =>
           Math.abs(cellAmount - a.amount) - Math.abs(cellAmount - b.amount),
       )
-      .slice(0, +data.x);
+      .slice(0, +input.x);
 
     setSelectedCell(closestArray.map((cell) => cell?.id));
   };
@@ -92,47 +92,44 @@ export const DataProvider: React.FC<DataProviderProps> = ({
     window.location.href = '/';
   };
 
-  const createTable = (): Promise<Table> => {
-    const table: Table = {};
+  // const createTable = (): Promise<Table> => {
+  //   const table: Table = {};
 
-    for (let i = 0; i < +data.m; i++) {
-      const row: Row = [];
-      const rowId = uuidv4();
+  //   for (let i = 0; i < input.m; i++) {
+  //     const row: Row = [];
+  //     const rowId = uuidv4();
 
-      for (let j = 0; j < +data.n; j++) {
-        const cell: Cell = {
-          id: uuidv4(),
-          amount: getRandomAmount(),
-        };
-        row.push(cell);
-      }
-      table[rowId] = row;
-    }
+  //     for (let j = 0; j < input.n; j++) {
+  //       const cell: Cell = {
+  //         id: uuidv4(),
+  //         amount: getRandomAmount(),
+  //       };
+  //       row.push(cell);
+  //     }
+  //     table[rowId] = row;
+  //   }
 
-    return new Promise((resolve) => {
-      setTimeout(function () {
-        resolve(table);
-      }, 1000);
-    });
-  };
+  //   return new Promise((resolve) => {
+  //     setTimeout(function () {
+  //       resolve(table);
+  //     }, 1000);
+  //   });
+  // };
 
-  const isEmptyData = () => {
-    for (let i in data) return false;
-    return true;
-  };
+  // useEffect(() => {
+  //   if (isCreate) {
+  //     setLoading(true);
+  //     createTable()
+  //       .then((response) => setTable(response))
+  //       .finally(() => setLoading(false));
+  //   }
+  // }, [isCreate]);
 
-  useEffect(() => {
-    if (!isEmptyData()) {
-      setOpenTable(true);
-      setLoading(true);
-      setInput(data);
-      createTable()
-        .then((response) => setTable(response))
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setTable(data);
+  //   }
+  // }, []);
 
   return (
     <DataContext.Provider

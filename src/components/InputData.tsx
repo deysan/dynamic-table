@@ -17,6 +17,7 @@ export const InputData: React.FC<InputDataProps> = ({ setOpenTable }) => {
     // event.preventDefault();
     // setCreate(true);
     // setOpenTable(true);
+    event.stopPropagation();
   };
 
   return (

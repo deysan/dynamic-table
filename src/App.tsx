@@ -1,11 +1,11 @@
 import { DataProvider } from './hooks/useData';
-import { Input } from './types';
 import { InputData } from './components/InputData';
 import { Table } from './components/Table';
+import { Table as TableType } from './types';
 import { useState } from 'react';
 
 interface AppProps {
-  data: Input;
+  data: TableType;
 }
 
 const App: React.FC<AppProps> = ({ data }) => {
@@ -13,7 +13,11 @@ const App: React.FC<AppProps> = ({ data }) => {
 
   return (
     <DataProvider setOpenTable={setOpenTable} data={data}>
-      {isOpenTable ? <Table /> : <InputData setOpenTable={setOpenTable} />}
+      {data ? (
+        <Table table={data} />
+      ) : (
+        <InputData setOpenTable={setOpenTable} />
+      )}
     </DataProvider>
   );
 };
