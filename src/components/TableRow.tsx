@@ -6,6 +6,7 @@ import { useData } from '../hooks/useData';
 interface TableRowProps {
   row: Row;
   rowId: string;
+  rowCount: number;
   isSelected: boolean;
   setSelected: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -13,6 +14,7 @@ interface TableRowProps {
 export const TableRow: React.FC<TableRowProps> = ({
   row,
   rowId,
+  rowCount,
   isSelected,
   setSelected,
 }) => {
@@ -91,6 +93,7 @@ export const TableRow: React.FC<TableRowProps> = ({
               height: '24px',
             }}
             onClick={() => handleDeleteRow(rowId)}
+            disabled={rowCount === 1}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -8,6 +8,7 @@ import fs from 'fs';
 import { parse } from 'querystring';
 import path from 'path';
 import { renderToString } from 'react-dom/server';
+import { validator } from './validator';
 
 interface Mime {
   [key: string]: string;
@@ -35,7 +36,7 @@ const server = createServer(function (req, res) {
     if (contentType === 'text/html' && req.url) {
       const html = fs.readFileSync(path.resolve('./dist/index.html'), 'utf-8');
 
-      const inputData = parse(req.url.substring(2)) as Input;
+      const inputData = validator(parse(req.url.substring(2)) as Input);
 
       const isEmptyData = () => {
         for (let i in inputData) return false;

@@ -70,11 +70,12 @@ export const Table: React.FC<TableProps> = ({ input }) => {
           </svg>
         </button>
       </p>
-      {Object.keys(table).map((row) => (
+      {Object.keys(table).map((row, index) => (
         <div className="row" key={row}>
           <TableRow
             row={table[row]}
             rowId={row}
+            rowCount={Object.keys(table).length}
             isSelected={isSelected}
             setSelected={setSelected}
           />
@@ -87,7 +88,12 @@ export const Table: React.FC<TableProps> = ({ input }) => {
           </div>
         ))}
         <div className="cell cell-active">
-          <button onClick={handleAddRow}>Add Row</button>
+          <button
+            onClick={handleAddRow}
+            disabled={Object.keys(table).length === 99}
+          >
+            Add Row
+          </button>
         </div>
       </div>
     </div>

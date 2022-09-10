@@ -125,12 +125,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({
   //   }
   // }, [isCreate]);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setTable(data);
-  //   }
-  // }, []);
-
   return (
     <DataContext.Provider
       value={{

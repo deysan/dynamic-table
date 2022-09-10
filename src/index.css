@@ -58,17 +58,17 @@ button {
   transition: all 200ms ease;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   color: #646cff;
   border-color: #646cff;
 }
 
-button:active {
+button:active:not(:disabled) {
   background-color: #f0f1ff;
 }
 
-button:focus,
-button:focus-visible {
+button:focus:not(:disabled),
+button:focus-visible:not(:disabled) {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
