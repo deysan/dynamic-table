@@ -33,7 +33,7 @@ export const TableRow: React.FC<TableRowProps> = ({
     <>
       {row.map((cell) => {
         return (
-          <div
+          <td
             className="cell"
             key={cell.id}
             onClick={() => handleChangeCell(rowId, cell.id)}
@@ -76,10 +76,10 @@ export const TableRow: React.FC<TableRowProps> = ({
                 ? Math.round((cell.amount / sumCell) * 100) + '%'
                 : cell.amount}
             </span>
-          </div>
+          </td>
         );
       })}
-      <div
+      <td
         className="cell cell-active"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -110,7 +110,7 @@ export const TableRow: React.FC<TableRowProps> = ({
             </svg>
           </button>
         )}
-      </div>
+      </td>
     </>
   );
 };

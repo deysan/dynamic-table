@@ -108,11 +108,21 @@ button:focus-visible:not(:disabled) {
   }
 }
 
-.table {
+table,
+tbody {
   display: grid;
   grid-auto-flow: row;
   grid-gap: 5px;
   padding: 5px;
+}
+
+thead tr,
+thead th {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  font-weight: normal;
 }
 
 .row {
