@@ -1,4 +1,5 @@
 import { Input, ServerData } from '../src/types';
+import { inputValidation, isEmptyData } from './validator';
 
 import App from '../src/App';
 import { createElement } from 'react';
@@ -8,7 +9,6 @@ import fs from 'fs';
 import { parse } from 'querystring';
 import path from 'path';
 import { renderToString } from 'react-dom/server';
-import { validator } from './validator';
 
 interface Mime {
   [key: string]: string;
@@ -35,20 +35,15 @@ const server = createServer(function (req, res) {
   fs.readFile(filePath, function (error, content) {
     if (contentType === 'text/html' && req.url) {
       const html = fs.readFileSync(path.resolve('./dist/index.html'), 'utf-8');
-
-      const inputData = validator(parse(req.url.substring(2)) as Input);
-
-      const isEmptyData = () => {
-        for (let i in inputData) return false;
-        return true;
-      };
+      const urlParams = parse(req.url.substring(2));
 
       let appHtml = html.replace(
         '<!--app-html-->',
         renderToString(createElement(App)),
       );
 
-      if (!isEmptyData()) {
+      if (!isEmptyData(urlParams)) {
+        const inputData = inputValidation(urlParams) as Input;
         const tableData = createTable(inputData);
 
         const data: ServerData = { input: inputData, table: tableData };

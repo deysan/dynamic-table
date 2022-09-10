@@ -88,7 +88,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({
     // setOpenTable(false);
     // setCreate(false);
     // setTable({});
-    setLoading(true);
     window.location.href = '/';
   };
 
