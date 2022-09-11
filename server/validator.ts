@@ -22,14 +22,7 @@ const isNumeric = (num: any) =>
   !isNaN(num as number);
 
 export const isValidInput = (data: ParsedUrlQuery) => {
-  if (
-    data.m !== undefined &&
-    data.n !== undefined &&
-    data.x !== undefined &&
-    isNumeric(data.m) &&
-    isNumeric(data.n) &&
-    isNumeric(data.x)
-  ) {
+  if (isNumeric(data.m) && isNumeric(data.n) && isNumeric(data.x)) {
     return true;
   }
   return false;
