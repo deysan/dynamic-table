@@ -10,9 +10,9 @@ export type Table = {
 };
 
 export type Input = {
-  m: string;
-  n: string;
-  x: string;
+  m: number;
+  n: number;
+  x: number;
 };
 
 export type Data = {

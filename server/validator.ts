@@ -1,17 +1,36 @@
 import { Input } from '../src/types';
 import { ParsedUrlQuery } from 'querystring';
 
-export const inputValidation = (inputData: ParsedUrlQuery) => {
-  let { m, n, x } = inputData as Input;
-
-  m = +m > 99 ? '99' : +m < 1 ? '1' : m;
-  n = +n > 99 ? '99' : +n < 1 ? '1' : n;
-  x = +x > +m * +n ? `${+m * +n}` : +x < 1 ? '1' : x;
-
-  return { m, n, x };
+type InputData = {
+  m: string;
+  n: string;
+  x: string;
 };
 
-export const isEmptyData = (data: {}) => {
-  for (let i in data) return false;
-  return true;
+export const inputFormat = (inputData: ParsedUrlQuery): Input => {
+  const { m, n, x } = inputData as InputData;
+
+  const formatM = +m > 99 ? 99 : +m < 1 ? 1 : +m;
+  const formatN = +n > 99 ? 99 : +n < 1 ? 1 : +n;
+  const formatX = +x > +m * +n ? +m * +n : +x < 1 ? 1 : +x;
+
+  return { m: formatM, n: formatN, x: formatX };
+};
+
+const isNumeric = (num: any) =>
+  (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&
+  !isNaN(num as number);
+
+export const isValidInput = (data: ParsedUrlQuery) => {
+  if (
+    data.m !== undefined &&
+    data.n !== undefined &&
+    data.x !== undefined &&
+    isNumeric(data.m) &&
+    isNumeric(data.n) &&
+    isNumeric(data.x)
+  ) {
+    return true;
+  }
+  return false;
 };

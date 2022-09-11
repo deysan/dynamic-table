@@ -22,7 +22,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({
   data,
 }) => {
   const [isCreate, setCreate] = useState(false);
-  const [input, setInput] = useState<Input>({ m: '5', n: '10', x: '3' });
+  const [input, setInput] = useState<Input>({ m: 5, n: 10, x: 3 });
   const [table, setTable] = useState<Table>(data?.table || {});
   const [loading, setLoading] = useState(false);
   const [selectedCell, setSelectedCell] = useState<string[]>([]);

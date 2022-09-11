@@ -1,5 +1,5 @@
 import { Input, ServerData } from '../src/types';
-import { inputValidation, isEmptyData } from './validator';
+import { inputFormat, isValidInput } from './validator';
 
 import App from '../src/App';
 import { createElement } from 'react';
@@ -42,8 +42,8 @@ const server = createServer(function (req, res) {
         renderToString(createElement(App)),
       );
 
-      if (!isEmptyData(urlParams)) {
-        const inputData = inputValidation(urlParams) as Input;
+      if (isValidInput(urlParams)) {
+        const inputData = inputFormat(urlParams) as Input;
         const tableData = createTable(inputData);
 
         const data: ServerData = { input: inputData, table: tableData };
