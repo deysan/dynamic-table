@@ -17,7 +17,7 @@ export const inputFormat = (inputData: ParsedUrlQuery): Input => {
   return { m: formatM, n: formatN, x: formatX };
 };
 
-const isNumeric = (num: any) =>
+const isNumeric = (num: unknown) =>
   (typeof num === 'number' || (typeof num === 'string' && num.trim() !== '')) &&
   !isNaN(num as number);
 
