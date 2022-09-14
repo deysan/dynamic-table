@@ -7,7 +7,7 @@ interface InputDataProps {
   setOpenTable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const InputData: React.FC<InputDataProps> = ({ setOpenTable }) => {
+export function InputData({ setOpenTable }: InputDataProps) {
   const { input, setInput, setCreate } = useData();
   const [loading, setLoading] = useState(true);
 
@@ -76,4 +76,4 @@ export const InputData: React.FC<InputDataProps> = ({ setOpenTable }) => {
       </div>
     </>
   );
-};
+}

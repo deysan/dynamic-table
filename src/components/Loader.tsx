@@ -1,4 +1,4 @@
-export const Loader = () => {
+export function Loader() {
   return (
     <div className="loader">
       <div className="box">
@@ -6,4 +6,4 @@ export const Loader = () => {
       </div>
     </div>
   );
-};
+}

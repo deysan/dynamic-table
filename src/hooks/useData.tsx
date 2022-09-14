@@ -16,11 +16,11 @@ interface DataProviderProps {
   data: ServerData;
 }
 
-export const DataProvider: React.FC<DataProviderProps> = ({
+export function DataProvider({
   children,
   setOpenTable,
   data,
-}) => {
+}: DataProviderProps) {
   const [isCreate, setCreate] = useState(false);
   const [input, setInput] = useState<Input>({ m: 5, n: 10, x: 3 });
   const [table, setTable] = useState<Table>(data?.table || {});
@@ -144,4 +144,4 @@ export const DataProvider: React.FC<DataProviderProps> = ({
       {children}
     </DataContext.Provider>
   );
-};
+}

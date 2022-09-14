@@ -8,7 +8,7 @@ interface AppProps {
   data: ServerData;
 }
 
-const App: React.FC<AppProps> = ({ data }) => {
+function App({ data }: AppProps) {
   const [isOpenTable, setOpenTable] = useState(false);
 
   return (
@@ -20,6 +20,6 @@ const App: React.FC<AppProps> = ({ data }) => {
       )}
     </DataProvider>
   );
-};
+}
 
 export default App;

@@ -11,13 +11,13 @@ interface TableRowProps {
   setSelected: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const TableRow: React.FC<TableRowProps> = ({
+export function TableRow({
   row,
   rowId,
   rowCount,
   isSelected,
   setSelected,
-}) => {
+}: TableRowProps) {
   const { handleChangeCell, handleDeleteRow, handleSelectCell, selectedCell } =
     useData();
   const [isHover, setHover] = useState(false);
@@ -113,4 +113,4 @@ export const TableRow: React.FC<TableRowProps> = ({
       </td>
     </>
   );
-};
+}

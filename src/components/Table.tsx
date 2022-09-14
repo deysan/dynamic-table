@@ -9,7 +9,7 @@ interface TableProps {
   input: Input;
 }
 
-export const Table: React.FC<TableProps> = ({ input }) => {
+export function Table({ input }: TableProps) {
   const { table, handleAddRow, refreshTable } = useData();
   const [isSelected, setSelected] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -112,4 +112,4 @@ export const Table: React.FC<TableProps> = ({ input }) => {
       </table>
     </>
   );
-};
+}
