@@ -3,24 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { Loader } from './Loader';
 import { useData } from '../hooks/useData';
 
-interface InputDataProps {
-  setOpenTable: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export function InputData({ setOpenTable }: InputDataProps) {
-  const { input, setInput, setCreate } = useData();
+export function InputData() {
+  const { input, setInput } = useData();
   const [loading, setLoading] = useState(true);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setInput((prevState) => ({ ...prevState, [name]: value }));
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    // event.preventDefault();
-    // setCreate(true);
-    // setOpenTable(true);
-    event.stopPropagation();
   };
 
   useEffect(() => {
@@ -34,7 +23,7 @@ export function InputData({ setOpenTable }: InputDataProps) {
       {loading && <Loader />}
       <div className="data">
         <h2>Input data for a table</h2>
-        <form className="form" onSubmit={handleSubmit}>
+        <form className="form">
           <div>
             <label htmlFor="m">Number of rows from 1 to 100</label>
             <input
@@ -71,7 +60,7 @@ export function InputData({ setOpenTable }: InputDataProps) {
               onChange={handleChange}
             />
           </div>
-          <button>Create table</button>
+          <button type="submit">Create table</button>
         </form>
       </div>
     </>

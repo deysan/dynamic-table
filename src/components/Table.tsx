@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Input } from '../types';
 import { Loader } from './Loader';
@@ -10,7 +10,7 @@ interface TableProps {
 }
 
 export function Table({ input }: TableProps) {
-  const { table, handleAddRow, refreshTable } = useData();
+  const { table, handleAddRow } = useData();
   const [isSelected, setSelected] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -62,7 +62,7 @@ export function Table({ input }: TableProps) {
                   width: '24px',
                   height: '24px',
                 }}
-                onClick={refreshTable}
+                onClick={() => (window.location.href = '/')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

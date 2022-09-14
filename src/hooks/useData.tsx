@@ -1,5 +1,5 @@
 import { Cell, Data, Input, Row, ServerData, Table } from '../types';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { getRandomAmount } from '../utils/randomNumbers';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,19 +12,13 @@ export const useData = () => {
 
 interface DataProviderProps {
   children: React.ReactNode;
-  setOpenTable: React.Dispatch<React.SetStateAction<boolean>>;
   data: ServerData;
 }
 
-export function DataProvider({
-  children,
-  setOpenTable,
-  data,
-}: DataProviderProps) {
+export function DataProvider({ children, data }: DataProviderProps) {
   const [isCreate, setCreate] = useState(false);
   const [input, setInput] = useState<Input>({ m: 5, n: 10, x: 3 });
   const [table, setTable] = useState<Table>(data?.table || {});
-  const [loading, setLoading] = useState(false);
   const [selectedCell, setSelectedCell] = useState<string[]>([]);
 
   const handleChangeCell = (rowId: string, cellId: string) => {
@@ -84,51 +78,10 @@ export function DataProvider({
     setSelectedCell(closestArray.map((cell) => cell?.id));
   };
 
-  const refreshTable = () => {
-    // setOpenTable(false);
-    // setCreate(false);
-    // setTable({});
-    window.location.href = '/';
-  };
-
-  // const createTable = (): Promise<Table> => {
-  //   const table: Table = {};
-
-  //   for (let i = 0; i < input.m; i++) {
-  //     const row: Row = [];
-  //     const rowId = uuidv4();
-
-  //     for (let j = 0; j < input.n; j++) {
-  //       const cell: Cell = {
-  //         id: uuidv4(),
-  //         amount: getRandomAmount(),
-  //       };
-  //       row.push(cell);
-  //     }
-  //     table[rowId] = row;
-  //   }
-
-  //   return new Promise((resolve) => {
-  //     setTimeout(function () {
-  //       resolve(table);
-  //     }, 1000);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   if (isCreate) {
-  //     setLoading(true);
-  //     createTable()
-  //       .then((response) => setTable(response))
-  //       .finally(() => setLoading(false));
-  //   }
-  // }, [isCreate]);
-
   return (
     <DataContext.Provider
       value={{
         table,
-        loading,
         handleChangeCell,
         handleDeleteRow,
         handleAddRow,
@@ -138,7 +91,6 @@ export function DataProvider({
         setCreate,
         input,
         setInput,
-        refreshTable,
       }}
     >
       {children}

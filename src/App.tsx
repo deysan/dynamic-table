@@ -9,15 +9,9 @@ interface AppProps {
 }
 
 function App({ data }: AppProps) {
-  const [isOpenTable, setOpenTable] = useState(false);
-
   return (
-    <DataProvider setOpenTable={setOpenTable} data={data}>
-      {data ? (
-        <Table input={data.input} />
-      ) : (
-        <InputData setOpenTable={setOpenTable} />
-      )}
+    <DataProvider data={data}>
+      {data ? <Table input={data.input} /> : <InputData />}
     </DataProvider>
   );
 }
