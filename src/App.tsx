@@ -1,14 +1,16 @@
 import { DataProvider } from './hooks/useData';
 import { InputData } from './components/InputData';
+import { ServerData } from './types';
 import { Table } from './components/Table';
-import { useState } from 'react';
 
-function App() {
-  const [isOpenTable, setOpenTable] = useState(false);
+interface AppProps {
+  data: ServerData;
+}
 
+function App({ data }: AppProps) {
   return (
-    <DataProvider setOpenTable={setOpenTable}>
-      {isOpenTable ? <Table /> : <InputData setOpenTable={setOpenTable} />}
+    <DataProvider data={data}>
+      {data ? <Table input={data.input} /> : <InputData />}
     </DataProvider>
   );
 }

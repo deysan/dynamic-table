@@ -1,7 +1,9 @@
-export const Loader = () => {
+export function Loader() {
   return (
-    <div className="box">
-      <div className="spinner"></div>
+    <div className="loader">
+      <div className="box">
+        <div className="spinner"></div>
+      </div>
     </div>
   );
-};
+}

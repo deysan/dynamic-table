@@ -6,16 +6,18 @@ import { useData } from '../hooks/useData';
 interface TableRowProps {
   row: Row;
   rowId: string;
+  rowCount: number;
   isSelected: boolean;
   setSelected: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const TableRow: React.FC<TableRowProps> = ({
+export function TableRow({
   row,
   rowId,
+  rowCount,
   isSelected,
   setSelected,
-}) => {
+}: TableRowProps) {
   const { handleChangeCell, handleDeleteRow, handleSelectCell, selectedCell } =
     useData();
   const [isHover, setHover] = useState(false);
@@ -31,7 +33,7 @@ export const TableRow: React.FC<TableRowProps> = ({
     <>
       {row.map((cell) => {
         return (
-          <div
+          <td
             className="cell"
             key={cell.id}
             onClick={() => handleChangeCell(rowId, cell.id)}
@@ -74,10 +76,10 @@ export const TableRow: React.FC<TableRowProps> = ({
                 ? Math.round((cell.amount / sumCell) * 100) + '%'
                 : cell.amount}
             </span>
-          </div>
+          </td>
         );
       })}
-      <div
+      <td
         className="cell cell-active"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -91,6 +93,7 @@ export const TableRow: React.FC<TableRowProps> = ({
               height: '24px',
             }}
             onClick={() => handleDeleteRow(rowId)}
+            disabled={rowCount === 1}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +110,7 @@ export const TableRow: React.FC<TableRowProps> = ({
             </svg>
           </button>
         )}
-      </div>
+      </td>
     </>
   );
-};
+}
