@@ -31,9 +31,11 @@ export function Table({ input }: TableProps) {
   }, [table]);
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setLoading(false);
     }, 500);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (

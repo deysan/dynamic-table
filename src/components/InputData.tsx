@@ -13,9 +13,11 @@ export function InputData() {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setLoading(false);
     }, 250);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
