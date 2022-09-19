@@ -10,8 +10,8 @@ type InputData = {
 export const inputFormat = (inputData: ParsedUrlQuery): Input => {
   const { m, n, x } = inputData as InputData;
 
-  const formatM = +m > 99 ? 99 : +m < 1 ? 1 : +m;
-  const formatN = +n > 99 ? 99 : +n < 1 ? 1 : +n;
+  const formatM = +m > 100 ? 100 : +m < 1 ? 1 : +m;
+  const formatN = +n > 100 ? 100 : +n < 1 ? 1 : +n;
   const formatX = +x > +m * +n ? +m * +n : +x < 1 ? 1 : +x;
 
   return { m: formatM, n: formatN, x: formatX };
