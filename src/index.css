@@ -55,7 +55,7 @@ button {
   border: 1px solid #213547;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 200ms ease;
+  transition: color 200ms ease, border-color 200ms ease;
 }
 
 button:hover:not(:disabled) {
