@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Loader } from './Loader';
-import { useData } from '../hooks/useData';
+import { Input } from '../types';
 
 export function InputData() {
-  const { input, setInput } = useData();
+  const [input, setInput] = useState<Input>({ m: 5, n: 10, x: 3 });
   const [loading, setLoading] = useState(true);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setInput((prevState) => ({ ...prevState, [name]: value }));
-  };
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.target;
+      setInput((prevState) => ({ ...prevState, [name]: value }));
+    },
+    [],
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {

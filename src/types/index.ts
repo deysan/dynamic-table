@@ -16,16 +16,26 @@ export type Input = {
 };
 
 export type Data = {
+  input: Input;
   table: Table;
+  columnAverage: number[];
   handleChangeCell: (rowId: string, cellId: string) => void;
   handleDeleteRow: (rowId: string) => void;
   handleAddRow: () => void;
   handleSelectCell: (cellAmount: number, cellId: string) => void;
-  selectedCell: string[];
+  selectedCells: string[];
   isCreate: boolean;
   setCreate: React.Dispatch<React.SetStateAction<boolean>>;
-  input: Input;
-  setInput: React.Dispatch<React.SetStateAction<Input>>;
+  currentCell: {
+    amount: number | null;
+    id: string | null;
+  };
+  setCurrentCell: React.Dispatch<
+    React.SetStateAction<{
+      amount: number | null;
+      id: string | null;
+    }>
+  >;
 };
 
 export interface ServerData {

@@ -1,34 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Input } from '../types';
 import { Loader } from './Loader';
 import { TableRow } from './TableRow';
 import { useData } from '../hooks/useData';
 
-interface TableProps {
-  input: Input;
-}
+export function Table() {
+  const { input, table, columnAverage, handleAddRow } = useData();
 
-export function Table({ input }: TableProps) {
-  const { table, handleAddRow } = useData();
   const [isSelected, setSelected] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const columnAverage = useMemo(() => {
-    const columnAverageArray = [];
-
-    for (let i = 0; i < Object.values(table)?.[0]?.length; i++) {
-      let average = 0;
-
-      for (let j = 0; j < Object.keys(table)?.length; j++) {
-        average += Object.values(table)[j][i].amount;
-      }
-
-      columnAverageArray.push(Math.round(average / Object.keys(table)?.length));
-    }
-
-    return columnAverageArray;
-  }, [table]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

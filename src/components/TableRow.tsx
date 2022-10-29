@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { Row } from '../types';
 import { useData } from '../hooks/useData';
@@ -18,14 +18,10 @@ export function TableRow({
   isSelected,
   setSelected,
 }: TableRowProps) {
-  const { handleChangeCell, handleDeleteRow, handleSelectCell, selectedCell } =
+  const { handleChangeCell, handleDeleteRow, setCurrentCell, selectedCells } =
     useData();
-  const [isHover, setHover] = useState(false);
 
-  const selectedCurrentCell = (cellAmount: number, cellId: string) => {
-    setSelected(true);
-    handleSelectCell(cellAmount, cellId);
-  };
+  const [isHover, setHover] = useState(false);
 
   const sumCell = row.reduce((acc, cell) => acc + cell.amount, 0);
 
@@ -37,16 +33,19 @@ export function TableRow({
             className="cell"
             key={cell.id}
             onClick={() => handleChangeCell(rowId, cell.id)}
-            onMouseEnter={() => selectedCurrentCell(cell.amount, cell.id)}
+            onMouseEnter={() => {
+              setSelected(true);
+              setCurrentCell({ amount: cell.amount, id: cell.id });
+            }}
             onMouseLeave={() => setSelected(false)}
             style={{
               color: `${
-                isSelected && selectedCell.includes(cell.id)
+                isSelected && selectedCells.includes(cell.id)
                   ? '#646cff'
                   : '#213547'
               }`,
               backgroundColor: `${
-                isSelected && selectedCell.includes(cell.id)
+                isSelected && selectedCells.includes(cell.id)
                   ? '#dddefc'
                   : '#ffffff'
               }`,

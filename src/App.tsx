@@ -9,9 +9,7 @@ interface AppProps {
 
 function App({ data }: AppProps) {
   return (
-    <DataProvider data={data}>
-      {data ? <Table input={data.input} /> : <InputData />}
-    </DataProvider>
+    <DataProvider data={data}>{data ? <Table /> : <InputData />}</DataProvider>
   );
 }
 
