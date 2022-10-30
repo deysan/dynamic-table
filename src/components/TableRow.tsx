@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Row } from '../types';
 import { useData } from '../hooks/useData';
@@ -7,32 +7,33 @@ interface TableRowProps {
   row: Row;
   rowId: string;
   rowCount: number;
-  isSelected: boolean;
-  setSelected: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function TableRow({
-  row,
-  rowId,
-  rowCount,
-  isSelected,
-  setSelected,
-}: TableRowProps) {
-  const { handleChangeCell, handleDeleteRow, setCurrentCell, selectedCells } =
-    useData();
+export function TableRow({ row, rowId, rowCount }: TableRowProps) {
+  const {
+    handleChangeCell,
+    handleDeleteRow,
+    setCurrentCell,
+    selectedCells,
+    isSelected,
+    setSelected,
+  } = useData();
 
   const [isHover, setHover] = useState(false);
 
-  const sumCell = row.reduce((acc, cell) => acc + cell.amount, 0);
+  const sumCell = useMemo(
+    () => row.reduce((acc, cell) => acc + cell.amount, 0),
+    [row],
+  );
 
   return (
     <>
-      {row.map((cell) => {
+      {row.map((cell, index) => {
         return (
           <td
             className="cell"
             key={cell.id}
-            onClick={() => handleChangeCell(rowId, cell.id)}
+            onClick={() => handleChangeCell(rowId, cell.id, index)}
             onMouseEnter={() => {
               setSelected(true);
               setCurrentCell({ amount: cell.amount, id: cell.id });

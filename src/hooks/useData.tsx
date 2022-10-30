@@ -26,10 +26,11 @@ export function DataProvider({ children, data }: DataProviderProps) {
   const [input] = useState<Input>(data?.input || {});
   const [table, setTable] = useState<Table>(data?.table || {});
   const [currentCell, setCurrentCell] = useState<{
-    amount: number | null;
-    id: string | null;
-  }>({ amount: null, id: null });
+    amount: number | 0;
+    id: string | '';
+  }>({ amount: 0, id: '' });
   const [selectedCells, setSelectedCells] = useState<string[]>([]);
+  const [isSelected, setSelected] = useState(false);
 
   const columnAverage = useMemo(() => {
     const columnAverageArray = [];
@@ -46,7 +47,26 @@ export function DataProvider({ children, data }: DataProviderProps) {
     return columnAverageArray;
   }, [table]);
 
-  const handleChangeCell = useCallback((rowId: string, cellId: string) => {
+  const filterSelectCell = useMemo(() => {
+    if (!currentCell.amount && !currentCell.id) return [];
+
+    let rowArray: Row = [];
+    rowArray = rowArray?.concat
+      .apply(rowArray, Object.values(table))
+      .filter((cell) => cell?.id !== currentCell.id);
+
+    const closestArray = rowArray
+      .sort(
+        (a, b) =>
+          Math.abs(currentCell.amount - a.amount) -
+          Math.abs(currentCell.amount - b.amount),
+      )
+      .slice(0, +input.x);
+
+    return closestArray.map((cell) => cell?.id);
+  }, [currentCell.amount, currentCell.id]);
+
+  const handleChangeCell = (rowId: string, cellId: string) => {
     setTable((prevState) => {
       return {
         ...prevState,
@@ -61,16 +81,16 @@ export function DataProvider({ children, data }: DataProviderProps) {
         }),
       };
     });
-  }, []);
+  };
 
-  const handleDeleteRow = useCallback((rowId: string) => {
+  const handleDeleteRow = (rowId: string) => {
     setTable((prevState) => {
       const changedTable: Table = { ...prevState };
       delete changedTable[rowId];
 
       return changedTable;
     });
-  }, []);
+  };
 
   const handleAddRow = useCallback(() => {
     const row: Row = [];
@@ -87,27 +107,11 @@ export function DataProvider({ children, data }: DataProviderProps) {
     setTable((prevState) => ({ ...prevState, [rowId]: row }));
   }, []);
 
-  const handleSelectCell = useCallback((cellAmount: number, cellId: string) => {
-    let rowArray: Row = [];
-    rowArray = rowArray?.concat
-      .apply(rowArray, Object.values(table))
-      .filter((cell) => cell?.id !== cellId);
-
-    const closestArray = rowArray
-      .sort(
-        (a, b) =>
-          Math.abs(cellAmount - a.amount) - Math.abs(cellAmount - b.amount),
-      )
-      .slice(0, +input.x);
-
-    setSelectedCells(closestArray.map((cell) => cell?.id));
-  }, []);
-
   useEffect(() => {
     if (currentCell.amount && currentCell.id) {
-      handleSelectCell(currentCell.amount, currentCell.id);
+      setSelectedCells(filterSelectCell);
     }
-  }, [currentCell.id]);
+  }, [filterSelectCell]);
 
   return (
     <DataContext.Provider
@@ -115,7 +119,6 @@ export function DataProvider({ children, data }: DataProviderProps) {
         input,
         table,
         columnAverage,
-        handleSelectCell,
         handleChangeCell,
         handleDeleteRow,
         handleAddRow,
@@ -124,6 +127,8 @@ export function DataProvider({ children, data }: DataProviderProps) {
         setCreate,
         currentCell,
         setCurrentCell,
+        isSelected,
+        setSelected,
       }}
     >
       {children}

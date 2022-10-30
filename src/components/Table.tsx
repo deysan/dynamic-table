@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Loader } from './Loader';
 import { TableRow } from './TableRow';
@@ -7,8 +7,21 @@ import { useData } from '../hooks/useData';
 export function Table() {
   const { input, table, columnAverage, handleAddRow } = useData();
 
-  const [isSelected, setSelected] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const renderTable = useMemo(
+    () =>
+      Object.keys(table).map((row) => (
+        <tr className="row" key={row}>
+          <TableRow
+            row={table[row]}
+            rowId={row}
+            rowCount={Object.keys(table).length}
+          />
+        </tr>
+      )),
+    [table],
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -64,17 +77,7 @@ export function Table() {
           </tr>
         </thead>
         <tbody>
-          {Object.keys(table).map((row) => (
-            <tr className="row" key={row}>
-              <TableRow
-                row={table[row]}
-                rowId={row}
-                rowCount={Object.keys(table).length}
-                isSelected={isSelected}
-                setSelected={setSelected}
-              />
-            </tr>
-          ))}
+          {renderTable}
           <tr className="row">
             {columnAverage.map((cell, index) => (
               <td className="cell" key={`columnAverage-${index}`}>

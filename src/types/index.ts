@@ -19,23 +19,24 @@ export type Data = {
   input: Input;
   table: Table;
   columnAverage: number[];
-  handleChangeCell: (rowId: string, cellId: string) => void;
+  handleChangeCell: (rowId: string, cellId: string, index: number) => void;
   handleDeleteRow: (rowId: string) => void;
   handleAddRow: () => void;
-  handleSelectCell: (cellAmount: number, cellId: string) => void;
   selectedCells: string[];
   isCreate: boolean;
   setCreate: React.Dispatch<React.SetStateAction<boolean>>;
   currentCell: {
-    amount: number | null;
-    id: string | null;
+    amount: number | 0;
+    id: string | '';
   };
   setCurrentCell: React.Dispatch<
     React.SetStateAction<{
-      amount: number | null;
-      id: string | null;
+      amount: number | 0;
+      id: string | '';
     }>
   >;
+  isSelected: boolean;
+  setSelected: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export interface ServerData {
